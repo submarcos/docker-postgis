@@ -1,23 +1,23 @@
-FROM postgres:9.6-alpine3.15
+FROM postgres:14-alpine3.16
 
 LABEL maintainer="PostGIS Project - https://postgis.net"
 
-ENV POSTGIS_VERSION 2.5.5
-ENV POSTGIS_SHA256 24b15ee36f3af02015da0e92a18f9046ea0b4fd24896196c8e6c2aa8e4b56baa
+ENV POSTGIS_VERSION 3.3.0rc2
+ENV POSTGIS_SHA256 ce153264f9f9f7b52cccff8b85599455ae93f9997198f9050a2f85365c136dcd
 
 RUN set -eux \
     \
     &&  if   [ $(printf %.1s "$POSTGIS_VERSION") == 3 ]; then \
             set -eux ; \
             #
-            # using only v3.15
+            # using only v3.16
             #
-            #GEOS: https://pkgs.alpinelinux.org/packages?name=geos&branch=v3.15 \
+            #GEOS: https://pkgs.alpinelinux.org/packages?name=geos&branch=v3.16 \
             export GEOS_ALPINE_VER=3.10 ; \
-            #GDAL: https://pkgs.alpinelinux.org/packages?name=gdal&branch=v3.15 \
-            export GDAL_ALPINE_VER=3.4 ; \
-            #PROJ: https://pkgs.alpinelinux.org/packages?name=proj&branch=v3.15 \
-            export PROJ_ALPINE_VER=8.2 ; \
+            #GDAL: https://pkgs.alpinelinux.org/packages?name=gdal&branch=v3.16 \
+            export GDAL_ALPINE_VER=3.5 ; \
+            #PROJ: https://pkgs.alpinelinux.org/packages?name=proj&branch=v3.16 \
+            export PROJ_ALPINE_VER=9.0 ; \
             #
         elif [ $(printf %.1s "$POSTGIS_VERSION") == 2 ]; then \
             set -eux ; \

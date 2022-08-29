@@ -2,7 +2,7 @@
 # When processing the rules for tagging and pushing container images with the
 # "latest" tag, the following variable will be the version that is considered
 # to be the latest.
-LATEST_VERSION=13-3.1
+LATEST_VERSION=14-3.2
 
 # The following flags are set based on VERSION and VARIANT environment variables
 # that may have been specified, and are used by rules to determine which
@@ -56,7 +56,7 @@ REPO_NAME  ?= postgis
 IMAGE_NAME ?= postgis
 
 DOCKER=docker
-DOCKERHUB_DESC_IMG=peterevans/dockerhub-description:2.1.0
+DOCKERHUB_DESC_IMG=peterevans/dockerhub-description:latest
 
 GIT=git
 OFFIMG_LOCAL_CLONE=$(HOME)/official-images
@@ -137,7 +137,7 @@ push-latest: tag-latest $(PUSH_LATEST_DEP)
 	$(DOCKER) image push $(REPO_NAME)/$(IMAGE_NAME):latest
 	@$(DOCKER) run -v "$(PWD)":/workspace \
                       -e DOCKERHUB_USERNAME='$(DOCKERHUB_USERNAME)' \
-                      -e DOCKERHUB_PASSWORD='$(DOCKERHUB_PASSWORD)' \
+                      -e DOCKERHUB_PASSWORD='$(DOCKERHUB_ACCESS_TOKEN)' \
                       -e DOCKERHUB_REPOSITORY='$(REPO_NAME)/$(IMAGE_NAME)' \
                       -e README_FILEPATH='/workspace/README.md' $(DOCKERHUB_DESC_IMG)
 

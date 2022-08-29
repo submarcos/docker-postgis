@@ -1,6 +1,6 @@
 # "experimental" ;  only for testing!
 # multi-stage dockerfile;  minimal docker version >= 17.05
-FROM postgres:%%PG_MAJOR%%-%%DEBIAN_VERSION%% as builder
+FROM postgres:15beta3-bullseye as builder
 
 LABEL maintainer="PostGIS Project - https://postgis.net"
 
@@ -11,16 +11,16 @@ RUN set -ex \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
       curl \
-      libboost-atomic%%BOOST_VERSION%% \
-      libboost-chrono%%BOOST_VERSION%% \
-      libboost-date-time%%BOOST_VERSION%% \
-      libboost-filesystem%%BOOST_VERSION%% \
-      libboost-program-options%%BOOST_VERSION%% \
-      libboost-serialization%%BOOST_VERSION%% \
-      libboost-system%%BOOST_VERSION%% \
-      libboost-test%%BOOST_VERSION%% \
-      libboost-thread%%BOOST_VERSION%% \
-      libboost-timer%%BOOST_VERSION%% \
+      libboost-atomic1.74.0 \
+      libboost-chrono1.74.0 \
+      libboost-date-time1.74.0 \
+      libboost-filesystem1.74.0 \
+      libboost-program-options1.74.0 \
+      libboost-serialization1.74.0 \
+      libboost-system1.74.0 \
+      libboost-test1.74.0 \
+      libboost-thread1.74.0 \
+      libboost-timer1.74.0 \
       libcurl3-gnutls \
       libexpat1 \
       libgmp10 \
@@ -62,7 +62,7 @@ RUN set -ex \
 # sfcgal
 ENV SFCGAL_VERSION master
 #current:
-#ENV SFCGAL_GIT_HASH %%SFCGAL_GIT_HASH%%
+#ENV SFCGAL_GIT_HASH 8675662a2725976642d0ecffd4efcfe68e484483
 #reverted for the last working version
 ENV SFCGAL_GIT_HASH e1f5cd801f8796ddb442c06c11ce8c30a7eed2c5
 
@@ -82,7 +82,7 @@ RUN set -ex \
 
 # proj
 ENV PROJ_VERSION master
-ENV PROJ_GIT_HASH %%PROJ_GIT_HASH%%
+ENV PROJ_GIT_HASH 1384b90602a6d2d51ed5ca0d2e28c8b4ada47aea
 
 RUN set -ex \
     && cd /usr/src \
@@ -114,7 +114,7 @@ RUN set -ex \
 
 # geos
 ENV GEOS_VERSION master
-ENV GEOS_GIT_HASH %%GEOS_GIT_HASH%%
+ENV GEOS_GIT_HASH 848bce44d308a05d082766da21ea5d9db2e79b8e
 
 RUN set -ex \
     && cd /usr/src \
@@ -131,7 +131,7 @@ RUN set -ex \
 
 # gdal
 ENV GDAL_VERSION master
-ENV GDAL_GIT_HASH %%GDAL_GIT_HASH%%
+ENV GDAL_GIT_HASH 581246a1ccaf62438e20be371f82453c19d54394
 
 RUN set -ex \
     && cd /usr/src \
@@ -178,22 +178,22 @@ RUN set -ex \
     && sfcgal-config --version \
     && pcre-config  --version
 
-FROM postgres:%%PG_MAJOR%%-%%DEBIAN_VERSION%%
+FROM postgres:15beta3-bullseye
 
 RUN set -ex \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
       curl \
-      libboost-atomic%%BOOST_VERSION%% \
-      libboost-chrono%%BOOST_VERSION%% \
-      libboost-date-time%%BOOST_VERSION%% \
-      libboost-filesystem%%BOOST_VERSION%% \
-      libboost-program-options%%BOOST_VERSION%% \
-      libboost-serialization%%BOOST_VERSION%% \
-      libboost-system%%BOOST_VERSION%% \
-      libboost-test%%BOOST_VERSION%% \
-      libboost-thread%%BOOST_VERSION%% \
-      libboost-timer%%BOOST_VERSION%% \
+      libboost-atomic1.74.0 \
+      libboost-chrono1.74.0 \
+      libboost-date-time1.74.0 \
+      libboost-filesystem1.74.0 \
+      libboost-program-options1.74.0 \
+      libboost-serialization1.74.0 \
+      libboost-system1.74.0 \
+      libboost-test1.74.0 \
+      libboost-thread1.74.0 \
+      libboost-timer1.74.0 \
       libcurl3-gnutls \
       libexpat1 \
       libgmp10 \
@@ -209,10 +209,10 @@ RUN set -ex \
 
 COPY --from=builder /usr/local /usr/local
 
-#ENV SFCGAL_GIT_HASH %%SFCGAL_GIT_HASH%%
-ENV PROJ_GIT_HASH %%PROJ_GIT_HASH%%
-ENV GEOS_GIT_HASH %%GEOS_GIT_HASH%%
-ENV GDAL_GIT_HASH %%GDAL_GIT_HASH%%
+#ENV SFCGAL_GIT_HASH 8675662a2725976642d0ecffd4efcfe68e484483
+ENV PROJ_GIT_HASH 1384b90602a6d2d51ed5ca0d2e28c8b4ada47aea
+ENV GEOS_GIT_HASH 848bce44d308a05d082766da21ea5d9db2e79b8e
+ENV GDAL_GIT_HASH 581246a1ccaf62438e20be371f82453c19d54394
 
 # Minimal command line test.
 RUN set -ex \
@@ -230,7 +230,7 @@ RUN ogr2ogr --formats | grep -q "PostgreSQL/PostGIS" && exit 0 \
 
 # install postgis
 ENV POSTGIS_VERSION master
-ENV POSTGIS_GIT_HASH %%POSTGIS_GIT_HASH%%
+ENV POSTGIS_GIT_HASH 2fca9d65ced41fe2cbe36d0f9d05d109b39d70db
 
 RUN set -ex \
     && apt-get update \

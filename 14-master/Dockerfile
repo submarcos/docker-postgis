@@ -62,7 +62,7 @@ RUN set -ex \
 # sfcgal
 ENV SFCGAL_VERSION master
 #current:
-#ENV SFCGAL_GIT_HASH 54b78af7b42f0f348f34879616a5da480b8e4974
+#ENV SFCGAL_GIT_HASH 8675662a2725976642d0ecffd4efcfe68e484483
 #reverted for the last working version
 ENV SFCGAL_GIT_HASH e1f5cd801f8796ddb442c06c11ce8c30a7eed2c5
 
@@ -82,7 +82,7 @@ RUN set -ex \
 
 # proj
 ENV PROJ_VERSION master
-ENV PROJ_GIT_HASH 9f89c7288e44c64ba234a299b1d5528a54d9d61e
+ENV PROJ_GIT_HASH 1384b90602a6d2d51ed5ca0d2e28c8b4ada47aea
 
 RUN set -ex \
     && cd /usr/src \
@@ -114,7 +114,7 @@ RUN set -ex \
 
 # geos
 ENV GEOS_VERSION master
-ENV GEOS_GIT_HASH 2a82afc1ac2327966f56bdf35a6d88aaadb81330
+ENV GEOS_GIT_HASH 848bce44d308a05d082766da21ea5d9db2e79b8e
 
 RUN set -ex \
     && cd /usr/src \
@@ -131,7 +131,7 @@ RUN set -ex \
 
 # gdal
 ENV GDAL_VERSION master
-ENV GDAL_GIT_HASH e1f2b40558cb61dc9ecd3de3282da7115c129c4f
+ENV GDAL_GIT_HASH 581246a1ccaf62438e20be371f82453c19d54394
 
 RUN set -ex \
     && cd /usr/src \
@@ -147,8 +147,21 @@ RUN set -ex \
         echo "Directory 'gdal' does not exists! Newer version! " ; \
     fi \
     \
-    && ./autogen.sh \
-    && ./configure --disable-static \
+    && if [ -f "./autogen.sh:" ]; then \
+        # Building with autoconf ( old/deprecated )
+        set -eux \
+        && ./autogen.sh \
+        && ./configure --disable-static \
+        ; \
+    else \
+        # Building with cmake
+        set -eux \
+        && mkdir build \
+        && cd build \
+        && cmake -DCMAKE_BUILD_TYPE=Release .. \
+        ; \
+    fi \
+    \
     && make -j$(nproc) \
     && make install \
     && cd / \
@@ -196,10 +209,10 @@ RUN set -ex \
 
 COPY --from=builder /usr/local /usr/local
 
-#ENV SFCGAL_GIT_HASH 54b78af7b42f0f348f34879616a5da480b8e4974
-ENV PROJ_GIT_HASH 9f89c7288e44c64ba234a299b1d5528a54d9d61e
-ENV GEOS_GIT_HASH 2a82afc1ac2327966f56bdf35a6d88aaadb81330
-ENV GDAL_GIT_HASH e1f2b40558cb61dc9ecd3de3282da7115c129c4f
+#ENV SFCGAL_GIT_HASH 8675662a2725976642d0ecffd4efcfe68e484483
+ENV PROJ_GIT_HASH 1384b90602a6d2d51ed5ca0d2e28c8b4ada47aea
+ENV GEOS_GIT_HASH 848bce44d308a05d082766da21ea5d9db2e79b8e
+ENV GDAL_GIT_HASH 581246a1ccaf62438e20be371f82453c19d54394
 
 # Minimal command line test.
 RUN set -ex \
@@ -217,7 +230,7 @@ RUN ogr2ogr --formats | grep -q "PostgreSQL/PostGIS" && exit 0 \
 
 # install postgis
 ENV POSTGIS_VERSION master
-ENV POSTGIS_GIT_HASH 6febe57e76d2239ea9779c489eff376f3ed76e72
+ENV POSTGIS_GIT_HASH 2fca9d65ced41fe2cbe36d0f9d05d109b39d70db
 
 RUN set -ex \
     && apt-get update \
